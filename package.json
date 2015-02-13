@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "express": "^4.11.2",
+    "express-session": "^1.10.2",
+    "github": "^0.2.3",
+    "passport": "^0.2.1",
+    "passport-github": "^0.1.5"
+  }
+}
