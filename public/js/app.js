@@ -1,14 +1,17 @@
 'use strict';
 var app = angular.module('coderFriends', ['ngRoute']);
 
-app.config(function($routeProvider) {
+app.config(function($routeProvider, $httpProvider) {
+	$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+	$httpProvider.interceptors.push('myHttpInterceptor');
+
 	$routeProvider
 		.when('/home', {
 			templateUrl: '/templates/home.html',
 			controller: 'homeCtrl',
 			resolve: {
-				friends: function(GithubService) {
-					return GithubService.getFollowing();
+				friends: function(githubService) {
+					return githubService.getFollowing();
 				}
 			}
 		})
@@ -16,7 +19,9 @@ app.config(function($routeProvider) {
 			templateUrl: '/templates/friend.html',
 			controller: 'friendCtrl',
 			resolve: {
-				events: function() {}
+				events: function(githubService, $route) {
+					return githubService.getEvents($route.current.params.github_username);
+				}
 			}
 		})
 		.otherwise({
@@ -24,15 +29,10 @@ app.config(function($routeProvider) {
 		});
 });
 
-app.config(function($httpProvider) {
-	$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-	$httpProvider.interceptors.push('myHttpInterceptor');
-});
-
 app.factory('myHttpInterceptor', function($q) {
 	return {
 		'responseError': function(rejection) {
-			if (rejection.status == 403) {
+			if(rejection.status == 403) {
 				document.location = '/';
 				return;
 			}

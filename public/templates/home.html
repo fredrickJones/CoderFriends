@@ -1,6 +1,4 @@
-<body>
-	<h3>Here are your Firends</h3>
-	<div ng-repeat="friend in following">
-		username: <a href="#/friend/"></a>{{friend}}
-	</div>
-</body>
+<div class="stuff" ng-repeat='friend in friends'>
+	id: <a href="#/friend/{{friend.login}}">{{friend.login}}</a>,
+	profilepic: <img src="{{friend.avatar_url}}">
+</div>
